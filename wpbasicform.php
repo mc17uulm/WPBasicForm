@@ -19,7 +19,9 @@ if(!function_exists('add_action'))
     exit;
 }
 
-include_once 'app/App.php';
+require_once 'vendor/autoload.php';
+
+use objects\Category;
 
 define('WBF__PLUGIN_DIR', plugin_dir_path(__FILE__));
 
@@ -61,9 +63,11 @@ function wbf_enqueue_script()
     wp_enqueue_script("bootstrap-datepicker-de", $dir . "js/bootstrap-datepicker.de.js", array('bootstrap-datepicker'), null, false);
     wp_enqueue_script("wbf", $dir . "js/wbf.js", array('jquery'), null, false);
 
-    wp_localize_script('wbf', 'wbf_ajax', array(
-       'ajaxurl' => admin_url('admin-ajax.php')
+    wp_localize_script('wbf', 'wbf', array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'tmpurl' => plugin_dir_url(__FILE__)
     ));
+
 
 }
 
@@ -84,5 +88,157 @@ add_action('wp_ajax_check_data', 'wbf_handle_ajax_request');
 
 function wbf_handle_ajax_request()
 {
-    $_POST["data"];
+    $data = $_POST["data"];
+
+    $prefix = $data["woman"] ? "geehrte" : "geehrter";
+    $ans = $data["woman"] ? "Frau" : "Herr";
+    $lastname = $data["lastname"];
+    date_default_timezone_set('Europe/Berlin');
+    setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu');
+    $c = strlen($data["date"]);
+    $date = $c > 10 ? $data["date"]/pow(10, ($c - 10)) : $data["date"];
+    $date = strftime("%B %Y", $date);
+
+    $infos = array();
+
+    if($data["customer"])
+    {
+        array_push($infos,
+            new Category(
+                "Allgemeine Angaben",
+                "Weil Sie noch kein Kunde sind benötigen wir Ihre Adressdaten."
+            )
+        );
+    }
+
+    if($data["impressum"])
+    {
+        array_push($infos,
+            new Category(
+                "Rechtliches",
+                "Weil Sie noch kein Impressum haben benötigen wir Angaben zu:
+                 <br>
+                 <ol>
+                    <li>Gesellschaftsform</li>
+                    <li>Gesellschafter</li>
+                    <li>zuständiges Amtsgericht etc.</li>
+                 </ol>"
+            )
+        );
+    }
+
+    if($data["dsgvo"] === "y_dsgvo")
+    {
+        array_push($infos,
+            new Category(
+                "Rechtliches",
+                "Weil Sie noch keine aktuelle Datenschutzerklärung haben benötigen wir Angaben zu:
+                <br>
+                <ol>
+                    <li>Datenshutzbeauftragem</li>
+                    <li>etc.</li>
+                </ol>"
+            )
+        );
+    }
+
+    if($data["cms"])
+    {
+        array_push($infos,
+            new Category(
+                "Technik",
+                "Weil Sie ein CMS wünschen benötigen wir
+                <br>
+                <ol>
+                    <li>Vertragsunterlagen zum Hostinganbieter</li>
+                    <li>Zugang zum Webspace</li>
+                    <li>etc.</li>
+                </ol>"
+            )
+        );
+    }
+
+    foreach($data["important"] as $imp)
+    {
+        $imp = substr($imp, strlen($imp) - 1);
+        switch($imp)
+        {
+            case "1":
+                array_push($infos,
+                    new Category(
+                        "Wichtiges",
+                        "Weil Ihnen besonders wichtig ist, dass Ihr Projekt bei Google rankt, benötigen wir:
+                                <br>
+                                <ol>
+                                    <li>Texte zu Ihrem Service (mind. 300 Wörter)</li>
+                                    <li>Bilder von Ihrem Service (Dateiformat JPEG)</li>
+                                    <li>etc.</li>
+                                </ol>"
+                    )
+                );
+                break;
+
+            case "2":
+                array_push($infos,
+                    new Category(
+                        "Wichtiges",
+                        "Weil Ihnen besonders wichtig ist, dass Ihr Projekt individuell ist, benötigen wir:
+                                <br>
+                                <ol>
+                                    <li>eine tolle Idee ;)</li>
+                                    <li>etc.</li>
+                                </ol>"
+                    )
+                );
+                break;
+
+            case "6":
+                array_push($infos,
+                    new Category(
+                        "Wichtiges",
+                        "Weil Sie Produkte verkaufen wollen, benötigen wir eine Liste aller Produkte mit folgenden Angaben:
+                                <br>
+                                <ol>
+                                    <li>Artikelnr.</li>
+                                    <li>Artikelbez.</li>
+                                    <li>Artikelbeschreibung</li>
+                                    <li>etc.</li>
+                                </ol>"
+                    ),
+                    new Category(
+                        "Wichtiges",
+                        "Weil Sie Produkte verkaufen wollen, benötigen wir von allen Artikeln Produktbilder."
+                    )
+                );
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
+
+    $files = glob(__DIR__ . "/tmp/*");
+    foreach($files as $file)
+    {
+        if(is_file($file))
+        {
+            unlink($file);
+        }
+    }
+
+    ob_start();
+    require "template.php";
+    $template = ob_get_clean();
+
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->loadHtml($template);
+    $dompdf->render();
+    $dompdf->setBasePath('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
+
+    $file = "tmp/" . bin2hex(openssl_random_pseudo_bytes(10)) . ".pdf";
+    file_put_contents(__DIR__ . "/". $file, $dompdf->output());
+    die(json_encode(array("type" => "success", "msg" => $file)));
+
 }

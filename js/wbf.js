@@ -3,6 +3,8 @@ jQuery(document).ready(($) => {
     console.log("wbf initalized");
 
     const check_btn = $('#check_btn');
+    const msg = $('#msg');
+    const download = $('#download');
     let date = -1;
     let err = "";
 
@@ -54,11 +56,12 @@ jQuery(document).ready(($) => {
             $('#msg_h').text("Fehler");
             $('#msg_p').html(`Bitte korrigieren Sie folgende Fehler:<br><ul>${err}</ul>`);
             err = "";
-            $('#msg').removeClass();
-            $('#msg').addClass('alert alert-danger');
-            $('#msg').show();
+            msg.removeClass();
+            msg.addClass('alert alert-danger');
+            msg.show();
             return;
         }
+        msg.hide();
         const obj = {
             woman: woman,
             firstname: firstname,
@@ -72,15 +75,35 @@ jQuery(document).ready(($) => {
             important: important
         };
 
+        console.log(obj);
+
+        check_btn.prop("disabled",true);
         $.ajax({
            type: "POST",
-           url: wbf_ajax.ajaxurl,
+           url: wbf.ajaxurl,
            data: {
                action: 'check_data',
                data: obj
            },
+           dataType: 'json',
            success: (r) => {
+               check_btn.prop("disabled",false);
                console.log(r);
+               try{
+                   if(r["type"] === "success")
+                   {
+                       let url = wbf.tmpurl + r["msg"];
+                       download.attr('href', url);
+                       download.trigger('click');
+                       download.show();
+                   } else{
+                       console.log("error: " + r["msg"]);
+                   }
+               } catch(e)
+               {
+                   console.log("Error:" + e);
+               }
+
            } ,
            error: (e) => {
                console.log(e);
@@ -97,7 +120,7 @@ jQuery(document).ready(($) => {
         language: 'de-DE',
         startDate: '01-01-2019'
     }).on('changeDate', (e) => {
-        date = e.date;
+        date = e.date.valueOf();
     });
 
     const validateEmail = (e) => {
