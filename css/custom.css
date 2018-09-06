@@ -1,0 +1,27 @@
+#main {
+    width: 700px;
+    padding: 50px;
+    background-color: #efefef;
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 20px;
+}
+
+@viewport {
+    width: 320px;
+    zoom: 1;
+}
+
+hr{
+    border-color: #ffffff;
+    border-style: solid none;
+    border-width: 1px 0;
+    margin: 18px 0;
+}
+
+h1{
+    font-size: 60px;
+}
+.platz {
+    visibility: hidden;
+}

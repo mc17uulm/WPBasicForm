@@ -1,0 +1,119 @@
+
+    <h1>Checklistenanfrage</h1>
+    <hr>
+    <h2>Ihre Kontaktdaten</h2>
+    <br>
+    <form>
+        <div class="form-group">
+            <label><strong>Anrede:</strong></label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="frau" name="salutation" checked>
+                <label class="form-check-label" for="frau"> Frau</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="mann" name="salutation">
+                <label class="form-check-label" for="mann"> Herr</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="firstName">Vorname:</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Vorname" value="M">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Nachname:</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Nachname" value="C">
+        </div>
+        <div class="form-group">
+            <label for="email">E-Mail-Adresse:</label>
+            <input type="text" class="form-control" id="email" placeholder="E-Mail-Adresse" value="test@web.de">
+        </div>
+        <div class="form-group">
+            <label><strong>Sind Sie schon Kunde bei uns?</strong></label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="y_customer" name="customer">
+                <label class="form-check-label" for="y_customer"> Ja</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="n_customer" name="customer" checked>
+                <label class="form-check-label" for="n_customer"> Nein</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label><strong>Wann soll Ihr Webprojekt fertig sein?</strong></label>
+            <div class='input-group date' id='finished_til'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label><strong>Haben Sie ein rechtsgültiges Impressum?</strong></label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="y_impressum" name="impressum">
+                <label class="form-check-label" for="y_impressum"> Ja</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="n_impressum" name="impressum" checked>
+                <label class="form-check-label" for="n_impressum"> Nein</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label><strong>Haben Sie eine Datenschutzerklärung?</strong></label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="y_dsgvo" name="dsgvo">
+                <label class="form-check-label" for="y_dsgvo"> Ja (DSGVO konform)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="n_dsgvo" name="dsgvo">
+                <label class="form-check-label" for="n_dsgvo"> Ja (aber nicht DSGVO konform)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="n_ds" name="dsgvo" checked>
+                <label class="form-check-label" for="n_ds"> Nein</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label><strong>Möchten Sie ein CMS nutzen?</strong></label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="y_cms" name="cms" checked>
+                <label class="form-check-label" for="y_cms"> Ja</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="n_cms" name="cms">
+                <label class="form-check-label" for="n_cms"> Nein</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label><strong>Was ist Ihnen besonders wichtig bei Ihrem Webprojekt?</strong></label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="check_1" name="important">
+                <label class="form-check-label" for="check_1"> Projekt soll "gut" bei Google ranken</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="check_2" name="important">
+                <label class="form-check-label" for="check_2"> Projekt soll einzigartig sein</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="check_3" name="important">
+                <label class="form-check-label" for="check_3"> Die Kosten sollen so gering wie möglich sein</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="check_4" name="important">
+                <label class="form-check-label" for="check_4"> Ich muss selber alles ändern können</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="check_5" name="important">
+                <label class="form-check-label" for="check_5"> Projekt soll auf mobilen Endgeräten dargestellt werden können</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="check_6" name="important">
+                <label class="form-check-label" for="check_6"> Ich will physische Produkte verkaufen</label>
+            </div>
+        </div>
+        <div class="" role="alert" id="msg" style="display:none;">
+            <h4 class="alert-heading" id="msg_h"></h4>
+            <p id="msg_p"></p>
+        </div>
+        <button type="button" class="btn btn-primary" id="check_btn">Checkliste generieren</button>
+    </form>
