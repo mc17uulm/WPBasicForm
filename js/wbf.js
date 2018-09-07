@@ -13,6 +13,8 @@ jQuery(document).ready(($) => {
 
         e.preventDefault();
 
+        msg.hide();
+
         console.log("clicked");
 
         // bool if woman or not
@@ -53,15 +55,11 @@ jQuery(document).ready(($) => {
         }
         if(err.length > 1)
         {
-            $('#msg_h').text("Fehler");
-            $('#msg_p').html(`Bitte korrigieren Sie folgende Fehler:<br><ul>${err}</ul>`);
+            showError(msg, `Bitte korrigieren Sie folgende Fehler:<br><ul>${err}</ul>`);
             err = "";
-            msg.removeClass();
-            msg.addClass('alert alert-danger');
-            msg.show();
             return;
         }
-        msg.hide();
+
         const obj = {
             woman: woman,
             firstname: firstname,
@@ -75,43 +73,38 @@ jQuery(document).ready(($) => {
             important: important
         };
 
-        console.log(obj);
-
         check_btn.prop("disabled",true);
+        check_btn.html(`<i class=”fas fa-sync fa-spin”></i> Laden ...`);
         $.ajax({
-           type: "POST",
-           url: wbf.ajaxurl,
-           data: {
-               action: 'check_data',
-               data: obj
-           },
-           dataType: 'json',
-           success: (r) => {
-               check_btn.prop("disabled",false);
-               console.log(r);
-               try{
-                   if(r["type"] === "success")
-                   {
-                       let url = wbf.tmpurl + r["msg"];
-                       download.attr('href', url);
-                       download.trigger('click');
-                       download.show();
-                   } else{
-                       console.log("error: " + r["msg"]);
-                   }
-               } catch(e)
-               {
-                   console.log("Error:" + e);
-               }
-
-           } ,
-           error: (e) => {
-               console.log(e);
-           }
+            type: "POST",
+            url: wbf.ajaxurl,
+            data: {
+                action: 'check_data',
+                data: obj
+            },
+            dataType: 'json'
+        }).done((d, s, o) => {
+            console.log(d);
+            try{
+                if(r["type"] === "success")
+                {
+                    let url = wbf.tmpurl + d["msg"];
+                    download.attr('href', url);
+                    download.trigger('click');
+                    download.show();
+                } else{
+                    showError(msg, `Leider gabe es einen Server-Fehler. Wenden Sie sich bitte an den Administrator`);
+                }
+            } catch(e)
+            {
+                showError(msg, `Leider gabe es einen Server-Fehler. Wenden Sie sich bitte an den Administrator`);
+            }
+        }).fail((o,s,e) => {
+                showError(msg, `Leider gabe es einen Server-Fehler. Wenden Sie sich bitte an den Administrator`);
+        }).always((d, t, e) => {
+            check_btn.prop("disabled",false);
+            check_btn.html("Checkliste generieren");
         });
-
-
-
     });
 
     // initalize datepicker
@@ -126,6 +119,24 @@ jQuery(document).ready(($) => {
     const validateEmail = (e) => {
         const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return regex.test(e);
+    };
+
+    const showError = (obj, err) =>
+    {
+        $('#msg_h').text("Fehler");
+        $('#msg_p').html(err);
+        msg.removeClass();
+        msg.addClass('alert alert-danger');
+        msg.show();
+    };
+
+    const showSuccess = (obj, msg) =>
+    {
+        $('#msg_h').text("Erfolg");
+        $('#msg_p').html(msg);
+        msg.removeClass();
+        msg.addClass('alert alert-success');
+        msg.show();
     }
 
 });

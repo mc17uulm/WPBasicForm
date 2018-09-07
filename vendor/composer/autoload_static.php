@@ -11,6 +11,10 @@ class ComposerStaticInitb9d99d03acf095fbbcfe9a5911d67e7b
         array (
             'objects\\' => 8,
         ),
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
         'F' => 
         array (
             'FontLib\\' => 8,
@@ -25,6 +29,10 @@ class ComposerStaticInitb9d99d03acf095fbbcfe9a5911d67e7b
         'objects\\' => 
         array (
             0 => __DIR__ . '/../..' . '/objects',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'FontLib\\' => 
         array (
