@@ -20,10 +20,10 @@ class App
                 $dsvgo = "Ja (aber nicht DSGVO konform)";
                 break;
             case "n_ds":
-                $dsgvo = "n_ds";
+                $dsgvo = "Nein";
                 break;
             default:
-                die(json_encode(array("type" => "error", "msg" => "invalid request")));
+               new Error("invalid request");
         }
 
         ob_start();
@@ -42,21 +42,21 @@ class App
             $mail->FromName = $config["from"];
             $mail->AddAddress($config["mail"]);
             $mail->Subject = "Neue Checklistenabfrage";
-            $mail->Budy = $html;
+            $mail->Body = $html;
             $mail->AltBody = strip_tags(($html));
 
-            if($mail->send())
-            {
+            //if($mail->send())
+            //{
                 die(json_encode(array("type" => "success", "msg" => $file, "other" => $data)));
-            }
+            /**}
             else
             {
-                die(json_encode(array("type" => "error", "msg" => "Mail error")));
-            }
+                new Error("Mail error");
+            }*/
 
         } catch(\Exception $e)
         {
-            die(json_encode(array("type" => "error", "msg" => $mail->ErrorInfo)));
+            new Error($mail->ErrorInfo);
         }
 
 
@@ -89,6 +89,10 @@ class App
 
         // Save to file and set random filename. Return file path relative to plugin dir
         $file = "tmp/" . bin2hex(openssl_random_pseudo_bytes(10)) . ".pdf";
+        if(!is_writable(__DIR__ . "/../" . $file))
+        {
+            new Error("Directory not writable");
+        }
         file_put_contents(__DIR__ . "/../". $file, $dompdf->output());
 
         return $file;

@@ -48,7 +48,6 @@ function wbf_enqueue_style()
     global $dir;
 
     wp_enqueue_style('bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', array(), false, 'all');
-    wp_enqueue_style('font-awesome', 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array(), 'all');
     wp_enqueue_style('bootstrap-datepicker', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css', array('bootstrap'), false, 'all');
     wp_enqueue_style('wbf', $dir . 'css/custom.css', array('bootstrap'), false, 'all');
 
@@ -81,15 +80,20 @@ function wbf_shortcode($atts)
     $atts = shortcode_atts(array("mail" => "", "from" => ""), $atts, "wbf");
     if(empty($atts["mail"]) || empty($atts["from"]))
     {
-        echo "Shortcode needs mail attribute";
+        echo "Shortcode invalid";
     }
     else
     {
         $config = json_decode(file_get_contents(__DIR__ . "/objects/config.json"), true);
         $config["from"] = $atts["from"];
         $config["mail"] = $atts["mail"];
-        file_put_contents(__DIR__ . "/objects/config.json", json_encode($config));
-        require('objects/form.html');
+        if(!is_writable(__DIR__ . "/objects/config.json"))
+        {
+            echo "Change permissions for plugin. See documentation.";
+        } else{
+            file_put_contents(__DIR__ . "/objects/config.json", json_encode($config));
+            require('objects/form.html');
+        }
     }
 
 

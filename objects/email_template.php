@@ -20,6 +20,7 @@ date_default_timezone_set('Berlin/Europe');
     <p>
         Hallo,
         <br>
+        <br>
         gerade hat ein Kunde eine Checklistenabfrage durchgeführt. Hier findest du die eingegebene Infos:
     </p>
     <h4>Kontaktdaten</h4>
@@ -72,6 +73,7 @@ date_default_timezone_set('Berlin/Europe');
     </p>
 
     Viele Grüße
+    <br>
     <br>
     Diese Nachricht wurde um <?= date('H:i:s d/m/Y', time()); ?> generiert.
 </body>
