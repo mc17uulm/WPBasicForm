@@ -1,6 +1,6 @@
 # WPBasicForm
 
-#### Allgemeine Informationen ####
+### Allgemeine Informationen ###
 Um das Formular nutzen zu können, müssen Sie auf einer Wordpress-Seite den `wbf` Shortcode einfügen:
 
 `wbf mail="" from=""`
@@ -11,7 +11,7 @@ In das `from`Attribut fügen Sie Ihren Namen, oder den Namen Ihres Unternehmens 
 
 Haben Sie den Shortcode richtig eingefügt, wird Ihnen auf der gewünschten Seite das Formular angezeigt
 
-#### Customization ####
+### Customization ###
 
 **Formular:**
 
