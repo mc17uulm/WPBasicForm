@@ -92,10 +92,6 @@ class App
 
         // Save to file and set random filename. Return file path relative to plugin dir
         $file = "tmp/" . bin2hex(openssl_random_pseudo_bytes(10)) . ".pdf";
-        if(!is_writable(__DIR__ . "/../" . $file))
-        {
-            new Error("Directory not writable");
-        }
         file_put_contents(__DIR__ . "/../". $file, $dompdf->output());
 
         return $file;

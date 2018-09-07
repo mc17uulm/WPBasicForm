@@ -79,7 +79,12 @@ function wbf_shortcode($atts)
         if(!is_writable(__DIR__ . "/objects/config.json"))
         {
             echo "Change permissions for plugin. See documentation.";
-        } else{
+        } else if(!is_writable(__DIR__ . "/tmp/"))
+        {
+            echo "Change permissions for plugin. See documentation.";
+        }
+        else
+        {
             file_put_contents(__DIR__ . "/objects/config.json", json_encode($config));
 
             // show the form based on form.html
