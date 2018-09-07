@@ -7,8 +7,7 @@
     "name": "mc17uulm/wp-basic-form",
     "authors": [
         {
-            "name": "mc17uulm",
-            "email": "marco.combosch@uni-ulm.de"
+            "name": "mc17uulm"
         }
     ],
     "require": {
