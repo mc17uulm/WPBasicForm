@@ -1,0 +1,18 @@
+{
+    "autoload": {
+        "psr-4": {
+            "objects\\": "objects/"
+        }
+    },
+    "name": "mc17uulm/wp-basic-form",
+    "authors": [
+        {
+            "name": "mc17uulm",
+            "email": "marco.combosch@uni-ulm.de"
+        }
+    ],
+    "require": {
+        "dompdf/dompdf": "^0.8.2",
+        "phpmailer/phpmailer": "^6.0"
+    }
+}
