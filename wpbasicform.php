@@ -14,6 +14,7 @@ Date: 06.09.2018
 
 */
 
+// check if worpress based execution
 if(!function_exists('add_action'))
 {
     exit;
@@ -23,24 +24,8 @@ require_once 'vendor/autoload.php';
 
 use objects\App;
 
-define('WBF__PLUGIN_DIR', plugin_dir_path(__FILE__));
-
-register_activation_hook(__FILE__, "wbf_activate");
-register_deactivation_hook(__FILE__, "wbf_deactivate");
-
+// plugin dir
 $dir = '/wp-content/plugins/WPBasicForm/';
-
-function wbf_activate()
-{
-
-
-}
-
-function wbf_deactivate()
-{
-
-
-}
 
 function wbf_enqueue_style()
 {
@@ -77,6 +62,7 @@ add_action('wp_enqueue_scripts', 'wbf_enqueue_script');
 function wbf_shortcode($atts)
 {
 
+    // shortcode need mail and from attributes to send mail
     $atts = shortcode_atts(array("mail" => "", "from" => ""), $atts, "wbf");
     if(empty($atts["mail"]) || empty($atts["from"]))
     {
@@ -87,11 +73,16 @@ function wbf_shortcode($atts)
         $config = json_decode(file_get_contents(__DIR__ . "/objects/config.json"), true);
         $config["from"] = $atts["from"];
         $config["mail"] = $atts["mail"];
+
+        // check if config.json can be accessed by the script. Else the script will fail
+        // to change the permissions, check the documentation
         if(!is_writable(__DIR__ . "/objects/config.json"))
         {
             echo "Change permissions for plugin. See documentation.";
         } else{
             file_put_contents(__DIR__ . "/objects/config.json", json_encode($config));
+
+            // show the form based on form.html
             require('objects/form.html');
         }
     }
@@ -101,6 +92,7 @@ function wbf_shortcode($atts)
 
 add_shortcode("wbf", 'wbf_shortcode');
 
+// handle ajax request for processing form data
 add_action('wp_ajax_nopriv_check_data', 'wbf_handle_ajax_request');
 add_action('wp_ajax_check_data', 'wbf_handle_ajax_request');
 
@@ -112,12 +104,15 @@ function wbf_handle_ajax_request()
     $prefix = $s ? "geehrte" : "geehrter";
     $ans = $s ? "Frau" : "Herr";
     $lastname = $data["lastname"];
+
+
     date_default_timezone_set('Europe/Berlin');
     setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu');
     $c = strlen($data["date"]);
     $time = $c > 10 ? $data["date"]/pow(10, ($c - 10)) : $data["date"];
     $date = strftime("%B %Y", $time);
 
+    // $file gives the relativ path to the temporary .pdf file
     $file = App::object_to_pdf($prefix, $ans, $lastname, $date, App::create_infos($data));
     App::send_mail($data, $time, $file);
 }

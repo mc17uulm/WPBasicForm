@@ -11,6 +11,7 @@ class App
     {
 
         $date = strftime("%e. %B %Y", $time);
+        // check which option was choosen in the form
         switch($data["dsgvo"])
         {
             case "y_dsgvo":
@@ -26,10 +27,12 @@ class App
                new Error("invalid request");
         }
 
+        // load the email template and render html
         ob_start();
         require "email_template.php";
         $html = ob_get_clean();
 
+        // load the config file
         $config = json_decode(file_get_contents(__DIR__ . "/config.json"), true);
 
         $mail = new PHPMailer(true);
@@ -45,14 +48,14 @@ class App
             $mail->Body = $html;
             $mail->AltBody = strip_tags(($html));
 
-            //if($mail->send())
-            //{
+            if($mail->send())
+            {
                 die(json_encode(array("type" => "success", "msg" => $file, "other" => $data)));
-            /**}
+            }
             else
             {
                 new Error("Mail error");
-            }*/
+            }
 
         } catch(\Exception $e)
         {
