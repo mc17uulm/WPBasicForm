@@ -74,7 +74,7 @@ jQuery(document).ready(($) => {
         };
 
         check_btn.prop("disabled",true);
-        check_btn.html(`<i class=”fas fa-sync fa-spin”></i> Laden ...`);
+        check_btn.html(`<i class="fas fa-sync fa-spin"></i> Laden ...`);
         $.ajax({
             type: "POST",
             url: wbf.ajaxurl,
@@ -86,12 +86,13 @@ jQuery(document).ready(($) => {
         }).done((d, s, o) => {
             console.log(d);
             try{
-                if(r["type"] === "success")
+                if(d["type"] === "success")
                 {
                     let url = wbf.tmpurl + d["msg"];
                     download.attr('href', url);
                     download.trigger('click');
                     download.show();
+                    console.log(d["other"]);
                 } else{
                     showError(msg, `Leider gabe es einen Server-Fehler. Wenden Sie sich bitte an den Administrator`);
                 }

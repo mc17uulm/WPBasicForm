@@ -36,21 +36,21 @@ class App
             $mail->isHTML(true);
             $mail->CharSet = "utf-8";
             $mail->SetLanguage("de");
-            $mail->From = "info@combosch.de";
-            $mail->FromName = "Combosch.de";
+            $mail->From = "info@" . $_SERVER["HTTP_HOST"];
+            $mail->FromName = "info@" . $_SERVER["HTTP_HOST"];
             $mail->AddAddress("m.combosch@web.de", "Marco Combosch");
             $mail->Subject = "Neue Checklistenabfrage";
             $mail->Budy = $html;
             $mail->AltBody = strip_tags(($html));
 
-            if($mail->send())
-            {
-                die(json_encode(array("type" => "success", "msg" => $file)));
-            }
+            //if($mail->send())
+            //{
+                die(json_encode(array("type" => "success", "msg" => $file, "other" => $data)));
+            /**}
             else
             {
                 die(json_encode(array("type" => "error", "msg" => "Mail error")));
-            }
+            }*/
 
         } catch(\Exception $e)
         {
@@ -65,7 +65,7 @@ class App
     {
 
         // Delete all old files in tmp directory
-        $files = glob(__DIR__ . "/tmp/*");
+        $files = glob(__DIR__ . "/../tmp/*");
         foreach($files as $file)
         {
             if(is_file($file))
@@ -87,7 +87,7 @@ class App
 
         // Save to file and set random filename. Return file path relative to plugin dir
         $file = "tmp/" . bin2hex(openssl_random_pseudo_bytes(10)) . ".pdf";
-        file_put_contents(__DIR__ . "/". $file, $dompdf->output());
+        file_put_contents(__DIR__ . "/../". $file, $dompdf->output());
 
         return $file;
 
@@ -98,7 +98,7 @@ class App
 
         $infos = array();
 
-        if($data["customer"])
+        if(!filter_var($data["customer"], FILTER_VALIDATE_BOOLEAN))
         {
             array_push($infos,
                 new Category(
@@ -108,7 +108,7 @@ class App
             );
         }
 
-        if($data["impressum"])
+        if(!filter_var($data["impressum"], FILTER_VALIDATE_BOOLEAN))
         {
             array_push($infos,
                 new Category(
@@ -124,7 +124,7 @@ class App
             );
         }
 
-        if($data["dsgvo"] === "y_dsgvo")
+        if($data["dsgvo"] !== "y_dsgvo")
         {
             array_push($infos,
                 new Category(
@@ -139,7 +139,7 @@ class App
             );
         }
 
-        if($data["cms"])
+        if(filter_var($data["cms"], FILTER_VALIDATE_BOOLEAN))
         {
             array_push($infos,
                 new Category(

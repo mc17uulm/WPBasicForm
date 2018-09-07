@@ -91,8 +91,9 @@ function wbf_handle_ajax_request()
 {
     $data = $_POST["data"];
 
-    $prefix = boolval($data["woman"]) ? "geehrte" : "geehrter";
-    $ans = boolval($data["woman"]) ? "Frau" : "Herr";
+    $s = filter_var($data["woman"], FILTER_VALIDATE_BOOLEAN);
+    $prefix = $s ? "geehrte" : "geehrter";
+    $ans = $s ? "Frau" : "Herr";
     $lastname = $data["lastname"];
     date_default_timezone_set('Europe/Berlin');
     setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'deu_deu');

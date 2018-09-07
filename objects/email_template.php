@@ -18,25 +18,25 @@ date_default_timezone_set('Berlin/Europe');
     <h3>Neue Checklistenabfrage</h3>
 
     <p>
-        Hallo Maxim,
+        Hallo,
         <br>
         gerade hat ein Kunde eine Checklistenabfrage durchgeführt. Hier findest du die eingegebene Infos:
     </p>
     <h4>Kontaktdaten</h4>
     <p>
-        <strong>Name: </strong><?= boolval($data["woman"]) ? "Frau" : "Herr" ?> <?= $data["firstname"] ?> <?= $data["lastname"] ?>
+        <strong>Name: </strong><?= filter_var($data["woman"], FILTER_VALIDATE_BOOLEAN) ? "Frau" : "Herr" ?> <?= $data["firstname"] ?> <?= $data["lastname"] ?>
         <br>
         <strong>E-Mail: </strong><a href="mailto:<?= $data["email"] ?>"><?= $data["email"] ?></a>
         <br>
-        <strong>Bereits Kunde? </strong><?= $data["customer"] ? "Ja" : "Nein" ?>
+        <strong>Bereits Kunde? </strong><?= filter_var($data["customer"], FILTER_VALIDATE_BOOLEAN) ? "Ja" : "Nein" ?>
         <br>
         <strong>Fertigstellung: </strong><?= $date ?>
         <br>
-        <strong>Hat ein rechtsgültiges Impressum? </strong><?= $data["impressum"] ? "Ja" : "Nein" ?>
+        <strong>Hat ein rechtsgültiges Impressum? </strong><?= filter_var($data["impressum"], FILTER_VALIDATE_BOOLEAN) ? "Ja" : "Nein" ?>
         <br>
         <strong>Hat eine Datenschutzerklärung? </strong><?= $dsgvo ?>
         <br>
-        <strong>Möchte ein CMS nutzen? </strong><?= $data["cms"] ? "Ja" : "Nein" ?>
+        <strong>Möchte ein CMS nutzen? </strong><?= filter_var($data["cms"], FILTER_VALIDATE_BOOLEAN) ? "Ja" : "Nein" ?>
         <br>
         <strong>Was ist dem Kunden besonders wichtig: </strong>
         <br>
