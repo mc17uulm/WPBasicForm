@@ -3,9 +3,9 @@
 ### Allgemeine Informationen ###
 Um das Formular nutzen zu können, müssen Sie auf einer Wordpress-Seite den `wbf` Shortcode einfügen:
 
-`wbf mail="" from=""`
+`[wbf mail="" from=""]`
 
-In das `mail` Attribut fügen Sie die E-Mail-Adresse ein, an welche Sie benachrichtigt sein möchten, wenn eine neue  Checkliste generiert wurde.
+In das `mail` Attribut fügen Sie die E-Mail-Adresse ein, an welche Sie benachrichtigt werden möchten, wenn eine neue  Checkliste generiert wurde.
 
 In das `from`Attribut fügen Sie Ihren Namen, oder den Namen Ihres Unternehmens ein.
 
