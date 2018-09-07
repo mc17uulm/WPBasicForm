@@ -78,7 +78,20 @@ add_action('wp_enqueue_scripts', 'wbf_enqueue_script');
 function wbf_shortcode($atts)
 {
 
-    require('objects/form.html');
+    $atts = shortcode_atts(array("mail" => "", "from" => ""), $atts, "wbf");
+    if(empty($atts["mail"]) || empty($atts["from"]))
+    {
+        echo "Shortcode needs mail attribute";
+    }
+    else
+    {
+        $config = json_decode(file_get_contents(__DIR__ . "/objects/config.json"), true);
+        $config["from"] = $atts["from"];
+        $config["mail"] = $atts["mail"];
+        file_put_contents(__DIR__ . "/objects/config.json", json_encode($config));
+        require('objects/form.html');
+    }
+
 
 }
 

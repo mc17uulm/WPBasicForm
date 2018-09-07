@@ -30,6 +30,8 @@ class App
         require "email_template.php";
         $html = ob_get_clean();
 
+        $config = json_decode(file_get_contents(__DIR__ . "/config.json"), true);
+
         $mail = new PHPMailer(true);
         try{
 
@@ -37,20 +39,20 @@ class App
             $mail->CharSet = "utf-8";
             $mail->SetLanguage("de");
             $mail->From = "info@" . $_SERVER["HTTP_HOST"];
-            $mail->FromName = "info@" . $_SERVER["HTTP_HOST"];
-            $mail->AddAddress("m.combosch@web.de", "Marco Combosch");
+            $mail->FromName = $config["from"];
+            $mail->AddAddress($config["mail"]);
             $mail->Subject = "Neue Checklistenabfrage";
             $mail->Budy = $html;
             $mail->AltBody = strip_tags(($html));
 
-            //if($mail->send())
-            //{
+            if($mail->send())
+            {
                 die(json_encode(array("type" => "success", "msg" => $file, "other" => $data)));
-            /**}
+            }
             else
             {
                 die(json_encode(array("type" => "error", "msg" => "Mail error")));
-            }*/
+            }
 
         } catch(\Exception $e)
         {
